@@ -74,7 +74,15 @@ class _Body extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.volume_up),
           tooltip: 'Nghe phát âm',
-          onPressed: () => context.read<TtsService>().speak(e.simplified),
+          onPressed: () async {
+            final messenger = ScaffoldMessenger.of(context);
+            if (!await context.read<TtsService>().speak(e.simplified)) {
+              messenger.showSnackBar(const SnackBar(
+                content: Text('Máy chưa có giọng đọc tiếng Trung. '
+                    'Cài "Speech Services by Google" để nghe phát âm.'),
+              ));
+            }
+          },
         ),
       ]),
       Center(

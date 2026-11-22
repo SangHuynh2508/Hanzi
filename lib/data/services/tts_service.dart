@@ -5,13 +5,14 @@ class TtsService {
   late final FlutterTts _tts = FlutterTts(); // created on first use
   bool _ready = false;
 
-  Future<void> speak(String hanzi) async {
+  /// False when the phone has no TTS engine or no Chinese voice.
+  Future<bool> speak(String hanzi) async {
     if (!_ready) {
-      await _tts.setLanguage('zh-CN');
+      if (await _tts.setLanguage('zh-CN') != 1) return false;
       await _tts.setSpeechRate(0.45);
       _ready = true;
     }
     await _tts.stop();
-    await _tts.speak(hanzi);
+    return await _tts.speak(hanzi) == 1;
   }
 }
