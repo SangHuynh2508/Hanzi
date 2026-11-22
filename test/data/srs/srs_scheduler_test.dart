@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hanzi/data/srs/srs_scheduler.dart';
+import 'package:doanmonhoc_hanzi/data/srs/srs_scheduler.dart';
 
 final _start = DateTime.utc(2026, 1, 1, 8);
 
