@@ -1,10 +1,12 @@
 # Bắt đầu từ đâu
 
+Phân công: **Ly** làm track Dev 2 (task `D1`–`D7`), **Nhi** làm track C (task `C1`–`C7`), leader làm track Leader (`L0`–`L14`).
+
 Đọc theo thứ tự, mất khoảng 30 phút:
 
 1. File này.
 2. [CONTRIBUTING.md](../CONTRIBUTING.md): nhánh, commit, PR.
-3. [Kế hoạch](superpowers/plans/2026-11-22-app-tu-vung-tieng-trung.md): mục **Trạng thái**, **Thay đổi so với kế hoạch**, rồi task của mình (Dev 2: `Task D1`…; C: `Task C1`…).
+3. [Kế hoạch](superpowers/plans/2026-11-22-app-tu-vung-tieng-trung.md): mục **Trạng thái**, **Thay đổi so với kế hoạch**, rồi task của mình.
 4. [Spec](superpowers/specs/2026-11-22-app-tu-vung-tieng-trung-design.md): chỉ các mục task của mình nhắc tới (ví dụ D2 đọc mục 4 và 6).
 
 ## 1. Lấy code
@@ -29,7 +31,7 @@ Tên nhánh gợi ý: D1 `feature/app-ci`, D2 `feature/data-dictionary-pipeline`
 
 ## 2. Cài môi trường
 
-### Dev 2 (Flutter)
+### Ly (Flutter)
 
 - Flutter stable **3.50.1** (Dart 3.14.0). Kiểm tra: `flutter --version`.
 - Android Studio (để có Android SDK). Lần đầu build, Gradle tự tải NDK 28.2; nếu báo thiếu NDK thì cài trong Android Studio › SDK Manager › SDK Tools › NDK.
@@ -45,7 +47,7 @@ flutter run
 
 Windows: `android/gradle.properties` đã tắt Kotlin incremental vì lỗi khi project và pub cache nằm khác ổ. Đừng bật lại.
 
-### C (Python)
+### Nhi (Python)
 
 - Python 3.11 trở lên.
 
@@ -62,8 +64,8 @@ Dataset để trong `research/data/` (đã gitignore, **không commit**).
 
 | Người | Làm trước | Làm song song | Cần gì từ người khác |
 |---|---|---|---|
-| Dev 2 | D1: CI + `NotificationService` chỉ có chữ ký | D2 v0: chỉ HSK 1 | Không. Schema từ điển đã có ở `lib/data/db/dictionary.drift` |
-| C | C1: môi trường, đọc giấy phép dataset | C2 HSK 1: chờ Dev 2 xuất danh sách từ HSK 1 (D2) | Danh sách từ từ D2 |
+| Ly | D1: CI + `NotificationService` chỉ có chữ ký | D2 v0: chỉ HSK 1 | Không. Schema từ điển đã có ở `lib/data/db/dictionary.drift` |
+| Nhi | C1: môi trường, đọc giấy phép dataset | C2 HSK 1: chờ Ly xuất danh sách từ HSK 1 (D2) | Danh sách từ từ D2 |
 
 Ghi chú cho D2:
 - Đọc comment đầu `lib/data/db/dictionary.drift` và xem `tools/build_sample_dictionary.py` (bản mẫu 20 từ) để biết cách tạo file đúng định dạng.
@@ -72,22 +74,16 @@ Ghi chú cho D2:
 
 Xong task: mở PR vào `develop`, gắn leader review, sửa dòng của task trong bảng **Trạng thái** của kế hoạch.
 
-## 4. Giao task cho AI (Claude Code, Cursor, Copilot…)
+## 4. Quy tắc
 
-Mở thư mục repo trong công cụ AI rồi dán (sửa mã task):
-
-```text
-Mình làm Task D1 trong docs/superpowers/plans/2026-11-22-app-tu-vung-tieng-trung.md.
-Trước khi code, đọc: docs/BAT_DAU.md, CONTRIBUTING.md, mục "Global Constraints"
-và "Thay đổi so với kế hoạch" trong kế hoạch, rồi toàn bộ Task D1.
-Spec ở docs/superpowers/specs/2026-11-22-app-tu-vung-tieng-trung-design.md (chỉ đọc mục task nhắc tới).
-Chỉ làm Task D1, không sửa code của task khác.
-Viết test theo đúng các test case của task trước, chạy thấy đỏ, rồi mới cài đặt.
-Trước khi commit: flutter analyze sạch, flutter test xanh.
-Commit theo mẫu <loại>(<phần>): <mô tả>, không thêm dòng Co-Authored-By.
-```
-
-Tự đọc lại code AI viết trước khi commit: người chấm xem lịch sử commit của từng người, và người review sẽ hỏi.
+- Mỗi nhánh, mỗi PR chỉ làm một task. Không sửa code thuộc task của người khác; cần đổi thì hỏi người đó hoặc leader trước.
+- Giữ đúng chữ ký trong mục **Interfaces** của task và mục **Thay đổi so với kế hoạch**. Muốn đổi chữ ký thì ghi lý do vào mô tả PR và sửa mục đó trong cùng PR.
+- Viết test theo các test case của task trước, chạy thấy đỏ rồi mới cài đặt.
+- Trước khi mở PR: `flutter analyze` sạch, `flutter test` xanh (Nhi: `pytest` xanh).
+- Commit nhỏ, theo mẫu `<loại>(<phần>): <mô tả>`, do chính mình commit. Không thêm dòng `Co-Authored-By` của công cụ AI.
+- Hiểu và giải thích được mọi dòng code mình commit; người review sẽ hỏi.
+- Không commit file bí mật và dataset (danh sách trong CONTRIBUTING).
+- Không push thẳng, không force-push lên `develop`/`main`.
 
 ## 5. Kẹt thì sao
 
