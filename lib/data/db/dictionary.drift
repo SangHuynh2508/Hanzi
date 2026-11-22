@@ -1,0 +1,43 @@
+-- Read-only dictionary schema (spec §6). PLAIN SQLITE ONLY: no drift-specific
+-- syntax, because tools/build_dictionary.py runs this file with
+-- sqlite3.executescript() to create assets/dictionary.sqlite.
+--
+-- Contract for the Python builder:
+--   * *_plain columns use the same rules as lib/core/utils (toPlain,
+--     normalizeVi), checked against test/fixtures/normalize_samples.json.
+--   * After inserting rows: INSERT INTO dict_fts(dict_fts) VALUES('rebuild');
+--   * Finally: PRAGMA user_version = 1;  (must equal DictionaryDatabase.schemaVersion)
+
+CREATE TABLE dict_entries (
+  id INTEGER NOT NULL PRIMARY KEY,
+  simplified TEXT NOT NULL,
+  traditional TEXT NOT NULL,
+  pinyin TEXT NOT NULL,
+  pinyin_plain TEXT NOT NULL,
+  han_viet TEXT NOT NULL,
+  han_viet_plain TEXT NOT NULL,
+  meaning_vi TEXT NOT NULL,
+  meaning_vi_plain TEXT NOT NULL,
+  meaning_en TEXT NOT NULL,
+  hsk_level INTEGER,
+  freq_rank INTEGER
+);
+
+CREATE INDEX dict_entries_simplified ON dict_entries (simplified);
+CREATE INDEX dict_entries_hsk ON dict_entries (hsk_level);
+
+CREATE TABLE hanzi (
+  char TEXT NOT NULL PRIMARY KEY,
+  han_viet_readings TEXT NOT NULL,
+  radical TEXT NOT NULL,
+  decomposition TEXT NOT NULL,
+  meaning TEXT NOT NULL
+);
+
+CREATE VIRTUAL TABLE dict_fts USING fts5(
+  pinyin_plain,
+  han_viet_plain,
+  meaning_vi_plain,
+  content='dict_entries',
+  content_rowid='id'
+);

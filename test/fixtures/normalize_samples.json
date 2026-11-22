@@ -1,0 +1,27 @@
+{
+  "_comment": "Shared contract: Dart (lib/core/utils) and tools/build_dictionary.py must produce exactly these outputs.",
+  "to_plain": [
+    ["xué shēng", "xuesheng"],
+    ["Xué Shēng", "xuesheng"],
+    ["xue2 sheng1", "xuesheng"],
+    ["lǜ", "lv"],
+    ["nǚ", "nv"],
+    ["lu:4", "lv"],
+    ["Zhōng guó", "zhongguo"],
+    ["xi'an", "xian"],
+    ["ma5", "ma"],
+    ["ér zi", "erzi"]
+  ],
+  "normalize_vi": [
+    ["Học sinh", "hoc sinh"],
+    ["ĐẠI HỌC", "dai hoc"],
+    ["  khoảng   trắng ", "khoang trang"],
+    ["người", "nguoi"],
+    ["Việt Nam", "viet nam"],
+    ["quốc gia", "quoc gia"],
+    ["đường", "duong"],
+    ["ỷ lại", "y lai"],
+    ["thuở", "thuo"],
+    ["học sinh; sinh viên", "hoc sinh; sinh vien"]
+  ]
+}

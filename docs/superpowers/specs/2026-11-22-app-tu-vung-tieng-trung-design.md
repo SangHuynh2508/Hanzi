@@ -62,7 +62,7 @@ Không dùng: `dio`/`http` (không gọi REST), `get_it` (`RepositoryProvider` �
 
 Quy tắc ghép:
 - Âm Hán-Việt của từ = nối âm từng chữ theo Unihan. Chữ có nhiều âm thì lấy âm đầu, rồi ghi đè bằng CSV soát tay.
-- Nghĩa tiếng Việt lấy từ CVDICT. Thiếu thì hiện nghĩa tiếng Anh. Từ HSK được ghi đè bằng CSV soát tay của thành viên C (`tools/overrides/*.csv`).
+- Nghĩa tiếng Việt lấy từ CVDICT. Thiếu thì hiện nghĩa tiếng Anh. Từ HSK được ghi đè bằng CSV soát tay của Nhi (`tools/overrides/*.csv`).
 - Vì CC BY-SA: app có màn "Nguồn dữ liệu & giấy phép"; file `dictionary.sqlite` nhóm build ra cũng mang giấy phép CC BY-SA 4.0.
 
 ## 5. Kiến trúc
@@ -193,7 +193,7 @@ Trước khi code mọi công thức, đối chiếu với wiki chính thức: g
 - Cách làm: với mỗi lần ôn, mỗi mô hình dự đoán xác suất nhớ chỉ từ lịch sử trước đó; nhãn thực tế: rating 1 = quên, 2–4 = nhớ. Bỏ các lần ôn thứ hai trở đi trong cùng một ngày (như srs-benchmark).
 - Chỉ số: log-loss, AUC, RMSE(bins) theo định nghĩa của srs-benchmark. Chia train/test theo người dùng (HLR cần train).
 - Kiểm tra chéo: đặt số của nhóm cạnh số công bố của srs-benchmark (github.com/open-spaced-repetition/srs-benchmark) cho FSRS-6, SM-2, HLR. Lệch nhiều thì rà lại code trước khi viết báo cáo.
-- Người làm: C chạy chính (tải dữ liệu, SM-2, HLR, chạy đánh giá, vẽ hình). Leader kiểm tra phần gọi py-fsrs và duyệt kết quả. Dev 2 không tham gia.
+- Người làm: Nhi chạy chính (tải dữ liệu, SM-2, HLR, chạy đánh giá, vẽ hình). Leader kiểm tra phần gọi py-fsrs và duyệt kết quả. Ly không tham gia.
 
 **9.3 Mở rộng: chọn thẻ ưu tiên khi dồn bài**
 - Bối cảnh: người học nghỉ N ngày, quay lại có nhiều thẻ quá hạn hơn giới hạn K lượt ôn mỗi ngày.
@@ -263,18 +263,18 @@ Trước khi code mọi công thức, đối chiếu với wiki chính thức: g
   - Mọi màn hình trừ đăng nhập; animation; responsive; widget test; test kiến trúc.
   - `research/`: khung mô phỏng + 3 chiến lược; port chiến lược thắng.
   - Dùng file từ điển mẫu ~150 từ HSK 1 cho tới khi có bản thật.
-- **Dev 2** – các module cắm vào sau, mỗi module tự test được:
+- **Ly** – các module cắm vào sau, mỗi module tự test được:
   1. `tools/build_dictionary.py` sinh `assets/dictionary.sqlite` đúng schema leader định nghĩa, kèm script kiểm tra.
   2. Đăng nhập: AuthRepository, AuthCubit, màn đăng nhập/đăng ký/quên mật khẩu, `redirect` router.
   3. Đồng bộ: SyncService, security rules, test `fake_cloud_firestore`, nút "Đồng bộ ngay", biểu tượng trạng thái.
   4. NotificationService, `connectivity_plus`. (TtsService chuyển cho leader vì kiểu ôn "nghe" và nút 🔊 cần nó sớm.)
   5. Workflow CI theo quy trình leader đặt ra.
-- **C** – dữ liệu, nghiên cứu, tài liệu: CSV soát nghĩa và Hán-Việt HSK 1–6; SM-2; HLR (leader hỗ trợ); chạy mô phỏng và đánh giá trên anki-revlogs; hình; `docs/test-cases.md`; bảng đối chiếu trong README; báo cáo; slide; video.
+- **Nhi** – dữ liệu, nghiên cứu, tài liệu: CSV soát nghĩa và Hán-Việt HSK 1–6; SM-2; HLR (leader hỗ trợ); chạy mô phỏng và đánh giá trên anki-revlogs; hình; `docs/test-cases.md`; bảng đối chiếu trong README; báo cáo; slide; video.
 - **Cả ba**: mỗi người viết mục thuật toán của mình trong `docs/algorithms.md`.
 
 ## 14. Lịch (tuần 1 = 23/11/2026, tuần 10 kết thúc 31/01/2027)
 
-| Tuần | Leader | Dev 2 | C | Mốc |
+| Tuần | Leader | Ly | Nhi | Mốc |
 |---|---|---|---|---|
 | 1 | Repo, CONTRIBUTING, PR template, Firebase; khung app; SrsScheduler + test vector; schema drift | CI, build_dictionary v0 | Tải dataset, soát CSV | Test FSRS xanh; schema từ điển trên `develop` |
 | 2 | Deck/Card repo, cubit, màn hình; phiên ôn lật thẻ | build_dictionary v1, đo kích thước APK | CSV HSK 1–2, tải và đọc anki-revlogs | |
@@ -285,7 +285,7 @@ Trước khi code mọi công thức, đối chiếu với wiki chính thức: g
 | 7 | Responsive, widget test, test kiến trúc | Test đồng bộ, sửa lỗi | Test tay máy thật | **Đóng băng tính năng** |
 | 8–10 | Hoàn thiện, diễn tập | APK release, diễn tập | Báo cáo, slide, video | **Nộp bài** |
 
-Nếu leader trễ sau tuần 4: chuyển màn Cài đặt + SettingsRepository cho Dev 2.
+Nếu leader trễ sau tuần 4: chuyển màn Cài đặt + SettingsRepository cho Ly.
 
 ## 15. Việc cần xác nhận ngoài nhóm
 

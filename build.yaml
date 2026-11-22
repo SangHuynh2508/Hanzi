@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          # Keep DateTime as ISO-8601 text so UTC values come back as UTC.
+          store_date_time_values_as_text: true
+          sql:
+            dialect: sqlite
+            options:
+              modules: [fts5]

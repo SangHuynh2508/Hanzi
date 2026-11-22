@@ -12,6 +12,59 @@
 
 **Spec:** `docs/superpowers/specs/2026-11-22-app-tu-vung-tieng-trung-design.md`
 
+**Mới vào nhóm / bắt đầu task đầu tiên:** đọc [`docs/BAT_DAU.md`](../../BAT_DAU.md) trước.
+
+## Trạng thái (cập nhật 22/11/2026)
+
+| Task | Trạng thái | Commit |
+|---|---|---|
+| L0 Repo, quy trình | Xong | `6b57f28` |
+| L1 Khung app, theme, router, test kiến trúc | Xong | `c354372` |
+| L2 SrsScheduler + vector FSRS | Xong | `9556c0e` |
+| L3 Pinyin, chuẩn hoá chữ | Xong | `7132f4e` |
+| L4 Hai drift DB, từ điển mẫu 20 từ, splash | Xong | `ce66dfe` |
+| L5 Tra từ, chi tiết từ, TTS | Xong | `8fb388d`, `c81869b` |
+| L6 CRUD bộ từ/thẻ, thêm bộ HSK | Xong | `30cd957` |
+| L7–L14 | Chưa làm | |
+| D1–D7 (Ly), C1–C7 (Nhi) | Chưa làm | |
+
+Code ở trên nằm ở nhánh `feature/app-week1`, vào `develop` sau khi PR của leader được merge. Người làm xong task thì sửa dòng tương ứng trong bảng này trong cùng PR.
+
+## Thay đổi so với kế hoạch (đọc trước khi làm task phụ thuộc)
+
+Phần dưới của kế hoạch giữ nguyên bản gốc; chỗ nào khác với mục này thì **mục này đúng**.
+
+**Thư viện, tiện ích có sẵn**
+- Không dùng package `uuid`: id mới lấy từ `newId()` trong `lib/core/utils/ids.dart` (UUID v4).
+- Giờ hiện tại lấy qua `Clock` (`lib/core/utils/clock.dart`, `nowUtc()`); repository nhận `Clock` qua constructor để test giả lập được.
+- Chuẩn hoá: `toPlain`, `containsHanzi` (`core/utils/pinyin.dart`), `normalizeVi` (`core/utils/text_normalize.dart`). Mẫu chung cho test chéo với Python: `test/fixtures/normalize_samples.json`.
+- `lib/core/router/app_router.dart` **chưa có** `redirect`/`isSignedIn`; D3 tự thêm (đừng tìm tham số có sẵn).
+- Firebase chưa được thêm vào `pubspec.yaml`, chưa có `main.dart` khởi tạo Firebase. Leader tạo project Firebase và gửi `google-services.json` trước khi D3 bắt đầu.
+
+**Từ điển (liên quan D2)**
+- Schema: `lib/data/db/dictionary.drift` (đọc comment đầu file: thứ tự chạy, `PRAGMA user_version = 1`).
+- File hiện tại `assets/dictionary.sqlite` là bản mẫu 20 từ HSK 1, build bằng `tools/build_sample_dictionary.py` từ `test/fixtures/dictionary_sample.sql`. D2 thay file này bằng output của `tools/build_dictionary.py`.
+- **Mỗi lần thay `assets/dictionary.sqlite` phải tăng `kDictionaryBuild`** trong `lib/data/db/dictionary_database.dart`, nếu không máy đã cài app sẽ giữ file cũ. `user_version` chỉ đổi khi đổi schema.
+- Test Dart vẫn dùng `test/fixtures/dictionary_sample.sql` (không đọc file asset), nên thay asset không làm hỏng test.
+
+**Chữ ký đã đổi so với bản gốc**
+- `TtsService.speak(String hanzi)` trả `Future<bool>` (false khi máy không có engine/giọng tiếng Trung).
+- `DeckRepository.addHskDeck(int level)` trả `Future<String?>`: id bộ (bộ đã có thì trả id cũ), `null` khi cấp đó chưa có từ.
+- Thêm `DeckRepository.watchDeck(String id)`; `DeckRepository` nhận `cards`, `dictionary`, `clock` qua constructor.
+- Model nằm cùng file repository: `DictEntry`, `HanziInfo` (`dictionary_repository.dart`), `CardDraft`, `CardItem` (`card_repository.dart`), `Deck` (`deck_repository.dart`, che row drift cùng tên bằng `hide Deck`).
+- `HanziApp` nhận `openDictionary` và `openAppDatabase` để test thay DB thật bằng DB trong bộ nhớ.
+
+**Dữ liệu người dùng (liên quan D5, D6)**
+- Xoá đều là xoá mềm (`deletedAt`); mọi lần ghi đặt `updatedAt = clock.nowUtc()` và `dirty = true`.
+- Xoá bộ: bộ và mọi thẻ còn sống của nó nhận **cùng một** `deletedAt`; khôi phục bộ chỉ khôi phục các thẻ có đúng mốc đó. Khi pull tombstone từ Firestore cần giữ đúng quy tắc này.
+- DateTime lưu dạng text ISO-8601 (`build.yaml`: `store_date_time_values_as_text`).
+- File `*.g.dart` được commit. Chỉ chạy `dart run build_runner build --delete-conflicting-outputs` khi sửa bảng drift hoặc `dictionary.drift`, rồi commit file sinh ra.
+
+**Test**
+- Helper trong `test/helpers/`: `TestRepos.open()` (DB người dùng trong bộ nhớ + từ điển mẫu, đồng hồ cố định 22/11/2026 10:00 UTC), `FixedClock`, `openSampleDictionary()`, `testApp()`.
+- Widget test có drift stream phải dùng `testAppWidgets(...)` thay cho `testWidgets(...)` và **không** `close()` DB người dùng trong `tearDown` (sẽ treo). Lý do ghi trong `test/helpers/test_app.dart`.
+- Chữ trong app viết tiếng Việt; test tìm widget bằng chữ đó (`find.text('Tạo bộ')`).
+
 ## Global Constraints
 
 - Chỉ Android. `minSdkVersion` 23. Flutter stable mới nhất lúc tạo repo; ghi phiên bản Flutter/Dart vào README.
@@ -81,12 +134,12 @@ docs/algorithms.md  docs/test-cases.md
 
 | Thứ | Người tạo | Người dùng | Khi nào phải có |
 |---|---|---|---|
-| `lib/data/db/dictionary.drift` (schema từ điển) | Leader (L4) | Dev 2 (D2) | Cuối tuần 1 |
-| Cột đồng bộ trong `app_database.dart` | Leader (L4) | Dev 2 (D5) | Cuối tuần 1 |
-| `NotificationService` (chỉ chữ ký, thân rỗng) | Dev 2 (D1) | Leader (L9) | Cuối tuần 1 |
-| `replay.dart` | Leader (L13) | Dev 2 (D6) | Tuần 6 |
-| `research/sim/` khung mô phỏng | Leader (L12) | C (C6) | Tuần 5 |
-| `tools/overrides/*.csv` | C (C2) | Dev 2 (D2) | Dần theo tuần 2–4 |
+| `lib/data/db/dictionary.drift` (schema từ điển) | Leader (L4) | Ly (D2) | Cuối tuần 1 |
+| Cột đồng bộ trong `app_database.dart` | Leader (L4) | Ly (D5) | Cuối tuần 1 |
+| `NotificationService` (chỉ chữ ký, thân rỗng) | Ly (D1) | Leader (L9) | Cuối tuần 1 |
+| `replay.dart` | Leader (L13) | Ly (D6) | Tuần 6 |
+| `research/sim/` khung mô phỏng | Leader (L12) | Nhi (C6) | Tuần 5 |
+| `tools/overrides/*.csv` | Nhi (C2) | Ly (D2) | Dần theo tuần 2–4 |
 
 ---
 
@@ -108,7 +161,7 @@ docs/algorithms.md  docs/test-cases.md
 - [ ] **Step 6:** Tạo Firebase project, bật Email/Password Auth và Firestore (Native mode), thêm email 2 thành viên vào Users and permissions.
 - [ ] **Step 7:** Commit `docs(docs): add contributing guide, PR template, README skeleton` lên `develop`.
 
-**Xong khi:** Dev 2 và C clone được, mở được PR thử, Firebase project truy cập được.
+**Xong khi:** Ly và Nhi clone được, mở được PR thử, Firebase project truy cập được.
 
 ### Task L1: Khung app, theme, router, test kiến trúc (tuần 1)
 
@@ -225,7 +278,7 @@ docs/algorithms.md  docs/test-cases.md
 
 - [ ] **Step 1:** Viết schema và test → đỏ. **Step 2:** Chạy `dart run build_runner build` → cài 2 DB → xanh.
 - [ ] **Step 3:** Màn Splash (`lib/presentation/screens/splash/splash_screen.dart`): gọi `openFromAssets(onProgress:)`, hiện thanh tiến trình khi chép lần đầu, xong thì vào router. Widget test: `onProgress` 0 → 0.5 → 1.0 thì thanh tiến trình đổi theo và cuối cùng chuyển sang `/home`.
-- [ ] **Step 4:** Push `dictionary.drift` lên `develop` sớm (cuối tuần 1) và báo Dev 2.
+- [ ] **Step 4:** Push `dictionary.drift` lên `develop` sớm (cuối tuần 1) và báo Ly.
 - [ ] **Step 5:** Commit `feat(data): add dictionary and app drift databases with splash loader`.
 
 ### Task L5: Tra từ, tìm kiếm, chi tiết từ, TTS (tuần 2–3)
@@ -449,7 +502,7 @@ docs/algorithms.md  docs/test-cases.md
 - Cùng seed → cùng kết quả; khác seed → khác.
 - `order_by_lowest_r` trả thẻ R nhỏ nhất đầu tiên trên một danh sách tự tạo.
 
-- [ ] **Step 1:** Test → đỏ. **Step 2:** Cài đặt → xanh. **Step 3:** Script chạy lưới N ∈ {7,14,30}, K ∈ {50,100}, 20 seed → `research/figures/*.png` + bảng CSV. Bàn giao cho C. **Step 4:** Commit `feat(research): learner simulator and backlog strategies`.
+- [ ] **Step 1:** Test → đỏ. **Step 2:** Cài đặt → xanh. **Step 3:** Script chạy lưới N ∈ {7,14,30}, K ∈ {50,100}, 20 seed → `research/figures/*.png` + bảng CSV. Bàn giao cho Nhi. **Step 4:** Commit `feat(research): learner simulator and backlog strategies`.
 
 ### Task L13: Port chiến lược thắng và replay (tuần 6)
 
@@ -477,7 +530,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ---
 
-# TRACK DEV 2
+# TRACK LY (task D)
 
 ### Task D1: CI và chữ ký NotificationService (tuần 1)
 
@@ -494,7 +547,7 @@ docs/algorithms.md  docs/test-cases.md
 ### Task D2: Pipeline từ điển (tuần 1–2, cập nhật CSV tới tuần 4)
 
 **Files:**
-- Create: `tools/build_dictionary.py`, `tools/check_dictionary.py`, `tools/requirements.txt`, `tools/README.md` (nguồn + giấy phép + cách chạy), `tools/overrides/{meaning_vi,hanviet}.csv` (header do D2 định nghĩa, C điền)
+- Create: `tools/build_dictionary.py`, `tools/check_dictionary.py`, `tools/requirements.txt`, `tools/README.md` (nguồn + giấy phép + cách chạy), `tools/overrides/{meaning_vi,hanviet}.csv` (header do D2 định nghĩa, Nhi điền)
 - Output: `assets/dictionary.sqlite`
 
 **Interfaces:**
@@ -600,7 +653,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ---
 
-# TRACK C
+# TRACK NHI (task C)
 
 ### Task C1: Môi trường và dữ liệu nghiên cứu (tuần 1)
 
@@ -611,7 +664,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ### Task C2: Soát CSV nghĩa Việt và Hán-Việt (tuần 1–4, mỗi tuần 1–2 cấp HSK)
 
-- [ ] Dev 2 xuất danh sách từ HSK n kèm nghĩa CVDICT và Hán-Việt tự ghép; C sửa trong Excel, lưu UTF-8 vào `tools/overrides/*.csv`.
+- [ ] Ly xuất danh sách từ HSK n kèm nghĩa CVDICT và Hán-Việt tự ghép; Nhi sửa trong Excel, lưu UTF-8 vào `tools/overrides/*.csv`.
 - [ ] Ưu tiên: từ thiếu nghĩa Việt, chữ có nhiều âm Hán-Việt, nghĩa máy dịch sai rõ ràng.
 - [ ] Mỗi cấp một commit `chore(data): curate HSK n meanings and Han-Viet`.
 
@@ -662,7 +715,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ## Lịch theo tuần (tóm tắt)
 
-| Tuần | Leader | Dev 2 | C |
+| Tuần | Leader | Ly | Nhi |
 |---|---|---|---|
 | 1 (23/11) | L0, L1, L2, L3, L4 | D1, D2 v0 | C1, C2 (HSK 1) |
 | 2 | L6, L7, bắt đầu L5 | D2 v1 | C2 (HSK 2), C7 bắt đầu |
@@ -674,4 +727,4 @@ docs/algorithms.md  docs/test-cases.md
 | 8–9 | L14 | D7 | C7 báo cáo |
 | 10 (–31/01) | Diễn tập | Diễn tập | Video, slide |
 
-Thứ tự cắt khi trễ: kiểu ôn "nghe" (L8) → C5 → `replay` trong D6 (dùng LWW cho cả trạng thái thẻ). Nếu leader trễ sau tuần 4: chuyển L9 (Cài đặt) cho Dev 2.
+Thứ tự cắt khi trễ: kiểu ôn "nghe" (L8) → C5 → `replay` trong D6 (dùng LWW cho cả trạng thái thẻ). Nếu leader trễ sau tuần 4: chuyển L9 (Cài đặt) cho Ly.

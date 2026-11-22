@@ -2,14 +2,14 @@
 
 Ứng dụng học từ vựng tiếng Trung cho người Việt: HSK 1–6, âm Hán-Việt (学生 = HỌC SINH), tách bộ thủ, lịch ôn FSRS-6, chạy offline và đồng bộ Firestore.
 
-Đồ án môn **CMP177 – Lập trình trên thiết bị di động**. Đề xuất: [DE_XUAT_DE_TAI.md](DE_XUAT_DE_TAI.md) · Thiết kế: [docs/superpowers/specs](docs/superpowers/specs) · Quy trình nhóm: [CONTRIBUTING.md](CONTRIBUTING.md)
+Đồ án môn **CMP177 – Lập trình trên thiết bị di động**. Đề xuất: [DE_XUAT_DE_TAI.md](DE_XUAT_DE_TAI.md) · Thiết kế: [docs/superpowers/specs](docs/superpowers/specs) · Quy trình nhóm: [CONTRIBUTING.md](CONTRIBUTING.md) · **Thành viên mới: [docs/BAT_DAU.md](docs/BAT_DAU.md)**
 
 ## Cài đặt
 
 - Flutter stable 3.50.1, Dart 3.14.0, Android minSdk 23.
 - `flutter pub get`
-- `dart run build_runner build --delete-conflicting-outputs`
-- Chép `google-services.json` (leader gửi riêng) vào `android/app/`.
+- `dart run build_runner build --delete-conflicting-outputs` (chỉ khi sửa bảng drift; file `*.g.dart` đã được commit)
+- Từ khi có đăng nhập (D3): chép `google-services.json` (leader gửi riêng) vào `android/app/`.
 - `flutter test`, `flutter run`
 
 ## Đáp ứng yêu cầu đồ án
