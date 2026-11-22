@@ -1,9 +1,12 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'data/db/dictionary_database.dart';
+import 'data/repositories/dictionary_repository.dart';
+import 'data/services/tts_service.dart';
 import 'presentation/screens/splash/splash_screen.dart';
 
 class HanziApp extends StatefulWidget {
@@ -21,7 +24,7 @@ class HanziApp extends StatefulWidget {
 class _HanziAppState extends State<HanziApp> {
   final GoRouter _router = buildRouter();
   double _progress = 0;
-  DictionaryDatabase? _dictionary; // handed to DictionaryRepository in L5
+  DictionaryDatabase? _dictionary;
 
   @override
   void initState() {
@@ -41,12 +44,18 @@ class _HanziAppState extends State<HanziApp> {
         home: SplashScreen(progress: _progress),
       );
     }
-    return MaterialApp.router(
-      title: 'Hanzi',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      routerConfig: _router,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (_) => DictionaryRepository(_dictionary!)),
+        RepositoryProvider(create: (_) => TtsService()),
+      ],
+      child: MaterialApp.router(
+        title: 'Hanzi',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        routerConfig: _router,
+      ),
     );
   }
 }
