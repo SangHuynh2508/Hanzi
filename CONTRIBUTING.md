@@ -35,7 +35,7 @@ Mở Pull Request vào `develop`, điền PR template, cần **ít nhất 1 ngư
 
 - UI không gọi DB hay Firestore trực tiếp: screen → cubit → repository. `test/architecture_test.dart` sẽ báo lỗi nếu vi phạm.
 - Viết test trước khi viết code cho logic (repository, cubit, `data/srs/`, `core/utils/`).
-- Trước khi mở PR: `dart run build_runner build --delete-conflicting-outputs`, `flutter analyze` sạch, `flutter test` xanh.
+- Trước khi mở PR: `flutter analyze` sạch, `flutter test` xanh. Có sửa bảng drift thì chạy `dart run build_runner build --delete-conflicting-outputs` và commit file `*.g.dart`.
 
 ## Bí mật
 
@@ -43,4 +43,4 @@ Không commit `google-services.json`, `GoogleService-Info.plist`, `lib/firebase_
 
 ## Chạy test trên Windows
 
-Test của drift chạy SQLite trên máy tính. Nếu `flutter test` báo thiếu thư viện sqlite3, xem mục "Cài đặt" trong README.
+Test của drift chạy SQLite trên máy tính; thư viện sqlite3 được tải tự động khi chạy `flutter test` lần đầu (cần mạng). Vẫn lỗi thì dán log vào nhóm chat.

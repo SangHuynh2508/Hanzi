@@ -12,6 +12,59 @@
 
 **Spec:** `docs/superpowers/specs/2026-11-22-app-tu-vung-tieng-trung-design.md`
 
+**Mới vào nhóm / bắt đầu task đầu tiên:** đọc [`docs/BAT_DAU.md`](../../BAT_DAU.md) trước.
+
+## Trạng thái (cập nhật 22/11/2026)
+
+| Task | Trạng thái | Commit |
+|---|---|---|
+| L0 Repo, quy trình | Xong | `6b57f28` |
+| L1 Khung app, theme, router, test kiến trúc | Xong | `c354372` |
+| L2 SrsScheduler + vector FSRS | Xong | `9556c0e` |
+| L3 Pinyin, chuẩn hoá chữ | Xong | `7132f4e` |
+| L4 Hai drift DB, từ điển mẫu 20 từ, splash | Xong | `ce66dfe` |
+| L5 Tra từ, chi tiết từ, TTS | Xong | `8fb388d`, `c81869b` |
+| L6 CRUD bộ từ/thẻ, thêm bộ HSK | Xong | `30cd957` |
+| L7–L14 | Chưa làm | |
+| D1–D7 (Dev 2), C1–C7 (C) | Chưa làm | |
+
+Code ở trên nằm ở nhánh `feature/app-week1`, vào `develop` sau khi PR của leader được merge. Người làm xong task thì sửa dòng tương ứng trong bảng này trong cùng PR.
+
+## Thay đổi so với kế hoạch (đọc trước khi làm task phụ thuộc)
+
+Phần dưới của kế hoạch giữ nguyên bản gốc; chỗ nào khác với mục này thì **mục này đúng**.
+
+**Thư viện, tiện ích có sẵn**
+- Không dùng package `uuid`: id mới lấy từ `newId()` trong `lib/core/utils/ids.dart` (UUID v4).
+- Giờ hiện tại lấy qua `Clock` (`lib/core/utils/clock.dart`, `nowUtc()`); repository nhận `Clock` qua constructor để test giả lập được.
+- Chuẩn hoá: `toPlain`, `containsHanzi` (`core/utils/pinyin.dart`), `normalizeVi` (`core/utils/text_normalize.dart`). Mẫu chung cho test chéo với Python: `test/fixtures/normalize_samples.json`.
+- `lib/core/router/app_router.dart` **chưa có** `redirect`/`isSignedIn`; D3 tự thêm (đừng tìm tham số có sẵn).
+- Firebase chưa được thêm vào `pubspec.yaml`, chưa có `main.dart` khởi tạo Firebase. Leader tạo project Firebase và gửi `google-services.json` trước khi D3 bắt đầu.
+
+**Từ điển (liên quan D2)**
+- Schema: `lib/data/db/dictionary.drift` (đọc comment đầu file: thứ tự chạy, `PRAGMA user_version = 1`).
+- File hiện tại `assets/dictionary.sqlite` là bản mẫu 20 từ HSK 1, build bằng `tools/build_sample_dictionary.py` từ `test/fixtures/dictionary_sample.sql`. D2 thay file này bằng output của `tools/build_dictionary.py`.
+- **Mỗi lần thay `assets/dictionary.sqlite` phải tăng `kDictionaryBuild`** trong `lib/data/db/dictionary_database.dart`, nếu không máy đã cài app sẽ giữ file cũ. `user_version` chỉ đổi khi đổi schema.
+- Test Dart vẫn dùng `test/fixtures/dictionary_sample.sql` (không đọc file asset), nên thay asset không làm hỏng test.
+
+**Chữ ký đã đổi so với bản gốc**
+- `TtsService.speak(String hanzi)` trả `Future<bool>` (false khi máy không có engine/giọng tiếng Trung).
+- `DeckRepository.addHskDeck(int level)` trả `Future<String?>`: id bộ (bộ đã có thì trả id cũ), `null` khi cấp đó chưa có từ.
+- Thêm `DeckRepository.watchDeck(String id)`; `DeckRepository` nhận `cards`, `dictionary`, `clock` qua constructor.
+- Model nằm cùng file repository: `DictEntry`, `HanziInfo` (`dictionary_repository.dart`), `CardDraft`, `CardItem` (`card_repository.dart`), `Deck` (`deck_repository.dart`, che row drift cùng tên bằng `hide Deck`).
+- `HanziApp` nhận `openDictionary` và `openAppDatabase` để test thay DB thật bằng DB trong bộ nhớ.
+
+**Dữ liệu người dùng (liên quan D5, D6)**
+- Xoá đều là xoá mềm (`deletedAt`); mọi lần ghi đặt `updatedAt = clock.nowUtc()` và `dirty = true`.
+- Xoá bộ: bộ và mọi thẻ còn sống của nó nhận **cùng một** `deletedAt`; khôi phục bộ chỉ khôi phục các thẻ có đúng mốc đó. Khi pull tombstone từ Firestore cần giữ đúng quy tắc này.
+- DateTime lưu dạng text ISO-8601 (`build.yaml`: `store_date_time_values_as_text`).
+- File `*.g.dart` được commit. Chỉ chạy `dart run build_runner build --delete-conflicting-outputs` khi sửa bảng drift hoặc `dictionary.drift`, rồi commit file sinh ra.
+
+**Test**
+- Helper trong `test/helpers/`: `TestRepos.open()` (DB người dùng trong bộ nhớ + từ điển mẫu, đồng hồ cố định 22/11/2026 10:00 UTC), `FixedClock`, `openSampleDictionary()`, `testApp()`.
+- Widget test có drift stream phải dùng `testAppWidgets(...)` thay cho `testWidgets(...)` và **không** `close()` DB người dùng trong `tearDown` (sẽ treo). Lý do ghi trong `test/helpers/test_app.dart`.
+- Chữ trong app viết tiếng Việt; test tìm widget bằng chữ đó (`find.text('Tạo bộ')`).
+
 ## Global Constraints
 
 - Chỉ Android. `minSdkVersion` 23. Flutter stable mới nhất lúc tạo repo; ghi phiên bản Flutter/Dart vào README.
