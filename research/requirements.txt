@@ -1,0 +1,1 @@
+fsrs @ git+https://github.com/open-spaced-repetition/py-fsrs@6fd0857
