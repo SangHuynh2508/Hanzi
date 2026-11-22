@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:doanmonhoc_hanzi/app.dart';
+import 'package:doanmonhoc_hanzi/data/db/app_database.dart';
 import 'package:doanmonhoc_hanzi/data/db/dictionary_database.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,12 +14,17 @@ void main() {
     late void Function(double) report;
     final db = DictionaryDatabase(NativeDatabase.memory());
     addTearDown(db.close);
+    final app = AppDatabase(NativeDatabase.memory());
+    addTearDown(app.close);
 
-    await tester.pumpWidget(HanziApp(openDictionary: (onProgress) async {
-      report = onProgress;
-      await release.future;
-      return db;
-    }));
+    await tester.pumpWidget(HanziApp(
+      openAppDatabase: () => app,
+      openDictionary: (onProgress) async {
+        report = onProgress;
+        await release.future;
+        return db;
+      },
+    ));
 
     report(0.5);
     await tester.pump();

@@ -1,9 +1,9 @@
-import 'package:doanmonhoc_hanzi/app.dart';
 import 'package:doanmonhoc_hanzi/data/db/dictionary_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../helpers/sample_dictionary.dart';
+import '../../helpers/test_app.dart';
 
 void main() {
   late DictionaryDatabase db;
@@ -16,9 +16,9 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('search by pinyin, open the word, see its characters',
+  testAppWidgets('search by pinyin, open the word, see its characters',
       (tester) async {
-    await tester.pumpWidget(HanziApp(openDictionary: (_) async => db));
+    await tester.pumpWidget(testApp(db));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Tra từ'));
     await tester.pumpAndSettle();
@@ -34,8 +34,8 @@ void main() {
     expect(find.text('生'), findsOneWidget);
   });
 
-  testWidgets('no match shows "Không tìm thấy"', (tester) async {
-    await tester.pumpWidget(HanziApp(openDictionary: (_) async => db));
+  testAppWidgets('no match shows "Không tìm thấy"', (tester) async {
+    await tester.pumpWidget(testApp(db));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Tra từ'));
     await tester.pumpAndSettle();

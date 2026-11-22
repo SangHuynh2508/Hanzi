@@ -1,8 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../data/repositories/card_repository.dart';
+import '../../../data/repositories/deck_repository.dart';
 import '../../../data/repositories/dictionary_repository.dart';
 import '../../../data/services/tts_service.dart';
+import '../decks/add_hsk_sheet.dart';
 import '../../state/dictionary/word_detail_cubit.dart';
 import '../../state/dictionary/word_detail_state.dart';
 import '../../widgets/hanzi_breakdown.dart';
@@ -101,12 +104,54 @@ class _Body extends StatelessWidget {
         _ => const LinearProgressIndicator(),
       },
       const SizedBox(height: 24),
-      // Enabled in L6 when decks exist.
       FilledButton.tonalIcon(
-        onPressed: null,
+        onPressed: () => _addToDeck(context, e),
         icon: const Icon(Icons.add),
         label: const Text('Thêm vào bộ…'),
       ),
     ]);
   }
+}
+
+/// Pick a deck (or make one) and add [e] to it as a new card.
+Future<void> _addToDeck(BuildContext context, DictEntry e) async {
+  final decks = context.read<DeckRepository>();
+  final cards = context.read<CardRepository>();
+  final messenger = ScaffoldMessenger.of(context);
+
+  final picked = await showModalBottomSheet<({String id, String name})>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheet) => StreamBuilder<List<Deck>>(
+      stream: decks.watchDecks(),
+      builder: (_, snap) => ListView(shrinkWrap: true, children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Text('Thêm ${e.simplified} vào bộ…',
+              style: Theme.of(sheet).textTheme.titleMedium),
+        ),
+        ListTile(
+          leading: const Icon(Icons.create_new_folder_outlined),
+          title: const Text('Tạo bộ mới…'),
+          onTap: () async {
+            final r = await showDeckDialog(sheet, title: 'Bộ mới');
+            if (r == null) return;
+            final id = await decks.create(r.name, r.description);
+            if (sheet.mounted) Navigator.pop(sheet, (id: id, name: r.name));
+          },
+        ),
+        for (final d in snap.data ?? const <Deck>[])
+          ListTile(
+            leading: const Icon(Icons.folder_outlined),
+            title: Text(d.name),
+            subtitle: Text('${d.cardCount} thẻ'),
+            onTap: () => Navigator.pop(sheet, (id: d.id, name: d.name)),
+          ),
+      ]),
+    ),
+  );
+  if (picked == null) return;
+  await cards.create(picked.id, CardDraft.fromEntry(e));
+  messenger.showSnackBar(
+      SnackBar(content: Text('Đã thêm ${e.simplified} vào "${picked.name}"')));
 }

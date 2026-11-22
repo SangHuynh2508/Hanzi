@@ -1,22 +1,19 @@
-import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:doanmonhoc_hanzi/app.dart';
-import 'package:doanmonhoc_hanzi/data/db/dictionary_database.dart';
-import 'package:doanmonhoc_hanzi/presentation/screens/decks/decks_screen.dart';
+import 'package:doanmonhoc_hanzi/presentation/screens/decks/deck_list_screen.dart';
 import 'package:material_ui/material_ui.dart';
+
+import 'helpers/test_app.dart';
 
 Future<void> pumpAt(WidgetTester tester, Size size) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
-  final db = DictionaryDatabase(NativeDatabase.memory());
-  addTearDown(db.close);
-  await tester.pumpWidget(HanziApp(openDictionary: (_) async => db));
+  await tester.pumpWidget(testApp());
   await tester.pumpAndSettle();
 }
 
 void main() {
-  testWidgets('opens on Trang chủ and switches tabs', (tester) async {
+  testAppWidgets('opens on Trang chủ and switches tabs', (tester) async {
     await pumpAt(tester, const Size(411, 891));
     expect(find.widgetWithText(AppBar, 'Trang chủ'), findsOneWidget);
 
@@ -28,16 +25,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Trang chủ'), findsOneWidget);
     // StatefulShellRoute keeps the visited tab alive offstage.
-    expect(find.byType(DecksScreen, skipOffstage: false), findsOneWidget);
+    expect(find.byType(DeckListScreen, skipOffstage: false), findsOneWidget);
   });
 
-  testWidgets('phone width uses NavigationBar', (tester) async {
+  testAppWidgets('phone width uses NavigationBar', (tester) async {
     await pumpAt(tester, const Size(411, 891));
     expect(find.byType(NavigationBar), findsOneWidget);
     expect(find.byType(NavigationRail), findsNothing);
   });
 
-  testWidgets('wide screen uses NavigationRail', (tester) async {
+  testAppWidgets('wide screen uses NavigationRail', (tester) async {
     await pumpAt(tester, const Size(800, 1280));
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);

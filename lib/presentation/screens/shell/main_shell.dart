@@ -23,6 +23,9 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final index = navigationShell.currentIndex;
+    // Own messenger so a screen's SnackBar lands in that screen's Scaffold
+    // and lifts its FAB, instead of in this outer Scaffold under the FAB.
+    final body = ScaffoldMessenger(child: navigationShell);
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth >= kWideBreakpoint) {
         return Scaffold(
@@ -41,12 +44,12 @@ class MainShell extends StatelessWidget {
               ],
             ),
             const VerticalDivider(width: 1),
-            Expanded(child: navigationShell),
+            Expanded(child: body),
           ]),
         );
       }
       return Scaffold(
-        body: navigationShell,
+        body: body,
         bottomNavigationBar: NavigationBar(
           selectedIndex: index,
           onDestinationSelected: _go,
