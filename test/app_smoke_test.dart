@@ -1,5 +1,7 @@
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:doanmonhoc_hanzi/app.dart';
+import 'package:doanmonhoc_hanzi/data/db/dictionary_database.dart';
 import 'package:doanmonhoc_hanzi/presentation/screens/decks/decks_screen.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -7,7 +9,9 @@ Future<void> pumpAt(WidgetTester tester, Size size) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(HanziApp());
+  final db = DictionaryDatabase(NativeDatabase.memory());
+  addTearDown(db.close);
+  await tester.pumpWidget(HanziApp(openDictionary: (_) async => db));
   await tester.pumpAndSettle();
 }
 

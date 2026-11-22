@@ -1,0 +1,26 @@
+-- Generated sample data (20 HSK 1 words). Tables come from lib/data/db/dictionary.drift.
+INSERT INTO dict_entries VALUES (1,'学生','學生','xué shēng','xuesheng','học sinh','hoc sinh','học sinh','hoc sinh','student',1,1);
+INSERT INTO dict_entries VALUES (2,'学习','學習','xué xí','xuexi','học tập','hoc tap','học tập','hoc tap','to learn; to study',1,2);
+INSERT INTO dict_entries VALUES (3,'老师','老師','lǎo shī','laoshi','lão sư','lao su','giáo viên, thầy cô','giao vien, thay co','teacher',1,3);
+INSERT INTO dict_entries VALUES (4,'中国','中國','Zhōng guó','zhongguo','trung quốc','trung quoc','Trung Quốc','trung quoc','China',1,4);
+INSERT INTO dict_entries VALUES (5,'你好','你好','nǐ hǎo','nihao','nhĩ hảo','nhi hao','xin chào','xin chao','hello',1,5);
+INSERT INTO dict_entries VALUES (6,'谢谢','謝謝','xiè xie','xiexie','tạ tạ','ta ta','cảm ơn','cam on','to thank; thanks',1,6);
+INSERT INTO dict_entries VALUES (7,'朋友','朋友','péng you','pengyou','bằng hữu','bang huu','bạn bè','ban be','friend',1,7);
+INSERT INTO dict_entries VALUES (8,'喜欢','喜歡','xǐ huan','xihuan','hỉ hoan','hi hoan','thích','thich','to like',1,8);
+INSERT INTO dict_entries VALUES (9,'吃','吃','chī','chi','cật','cat','ăn','an','to eat',1,9);
+INSERT INTO dict_entries VALUES (10,'喝','喝','hē','he','hát','hat','uống','uong','to drink',1,10);
+INSERT INTO dict_entries VALUES (11,'水','水','shuǐ','shui','thủy','thuy','nước','nuoc','water',1,11);
+INSERT INTO dict_entries VALUES (12,'米饭','米飯','mǐ fàn','mifan','mễ phạn','me phan','cơm','com','cooked rice',1,12);
+INSERT INTO dict_entries VALUES (13,'医生','醫生','yī shēng','yisheng','y sinh','y sinh','bác sĩ','bac si','doctor',1,13);
+INSERT INTO dict_entries VALUES (14,'学校','學校','xué xiào','xuexiao','học hiệu','hoc hieu','trường học','truong hoc','school',1,14);
+INSERT INTO dict_entries VALUES (15,'汉语','漢語','Hàn yǔ','hanyu','hán ngữ','han ngu','tiếng Hán, tiếng Trung','tieng han, tieng trung','Chinese language',1,15);
+INSERT INTO dict_entries VALUES (16,'大','大','dà','da','đại','dai','to, lớn','to, lon','big',1,16);
+INSERT INTO dict_entries VALUES (17,'小','小','xiǎo','xiao','tiểu','tieu','nhỏ, bé','nho, be','small',1,17);
+INSERT INTO dict_entries VALUES (18,'人','人','rén','ren','nhân','nhan','người','nguoi','person',1,18);
+INSERT INTO dict_entries VALUES (19,'爱','愛','ài','ai','ái','ai','yêu','yeu','to love',1,19);
+INSERT INTO dict_entries VALUES (20,'家','家','jiā','jia','gia','gia','nhà, gia đình','nha, gia dinh','home; family',1,20);
+INSERT INTO hanzi VALUES ('学','học','子','⿱⺍⿱冖子','học');
+INSERT INTO hanzi VALUES ('生','sinh','生','⿱𠂉土','sinh ra, sống');
+INSERT INTO hanzi VALUES ('中','trung','丨','⿻口丨','giữa');
+INSERT INTO hanzi VALUES ('国','quốc','囗','⿴囗玉','nước, quốc gia');
+INSERT INTO dict_fts(dict_fts) VALUES('rebuild');
