@@ -1,6 +1,6 @@
 # Bắt đầu từ đâu
 
-Phân công: **Ly** làm track Dev 2 (task `D1`–`D7`), **Nhi** làm track C (task `C1`–`C7`), leader làm track Leader (`L0`–`L14`).
+Phân công: **Ly** làm task `D1`–`D7`, **Nhi** làm task `C1`–`C7`, leader làm `L0`–`L14`.
 
 Đọc theo thứ tự, mất khoảng 30 phút:
 
@@ -72,20 +72,11 @@ Ghi chú cho D2:
 - Thay `assets/dictionary.sqlite` thì tăng `kDictionaryBuild` trong `lib/data/db/dictionary_database.dart`.
 - Kiểm tra trên máy: tab Tra từ, gõ `xuesheng` và `hoc sinh` đều ra `学生`.
 
-Xong task: mở PR vào `develop`, gắn leader review, sửa dòng của task trong bảng **Trạng thái** của kế hoạch.
+Xong task: mở PR vào `develop`, gắn leader review.
 
-## 4. Quy tắc
+Quy tắc nhánh, commit, phạm vi task, code: xem [CONTRIBUTING.md](../CONTRIBUTING.md).
 
-- Mỗi nhánh, mỗi PR chỉ làm một task. Không sửa code thuộc task của người khác; cần đổi thì hỏi người đó hoặc leader trước.
-- Giữ đúng chữ ký trong mục **Interfaces** của task và mục **Thay đổi so với kế hoạch**. Muốn đổi chữ ký thì ghi lý do vào mô tả PR và sửa mục đó trong cùng PR.
-- Viết test theo các test case của task trước, chạy thấy đỏ rồi mới cài đặt.
-- Trước khi mở PR: `flutter analyze` sạch, `flutter test` xanh (Nhi: `pytest` xanh).
-- Commit nhỏ, theo mẫu `<loại>(<phần>): <mô tả>`, do chính mình commit. Không thêm dòng `Co-Authored-By` của công cụ AI.
-- Hiểu và giải thích được mọi dòng code mình commit; người review sẽ hỏi.
-- Không commit file bí mật và dataset (danh sách trong CONTRIBUTING).
-- Không push thẳng, không force-push lên `develop`/`main`.
-
-## 5. Kẹt thì sao
+## 4. Kẹt thì sao
 
 - Câu hỏi về interface, task của người khác: hỏi leader trong nhóm chat hoặc comment vào PR.
 - Lỗi máy/môi trường: dán nguyên log lỗi vào nhóm chat.

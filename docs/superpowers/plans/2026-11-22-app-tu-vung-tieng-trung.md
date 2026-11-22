@@ -134,12 +134,12 @@ docs/algorithms.md  docs/test-cases.md
 
 | Thứ | Người tạo | Người dùng | Khi nào phải có |
 |---|---|---|---|
-| `lib/data/db/dictionary.drift` (schema từ điển) | Leader (L4) | Dev 2 (D2) | Cuối tuần 1 |
-| Cột đồng bộ trong `app_database.dart` | Leader (L4) | Dev 2 (D5) | Cuối tuần 1 |
-| `NotificationService` (chỉ chữ ký, thân rỗng) | Dev 2 (D1) | Leader (L9) | Cuối tuần 1 |
-| `replay.dart` | Leader (L13) | Dev 2 (D6) | Tuần 6 |
-| `research/sim/` khung mô phỏng | Leader (L12) | C (C6) | Tuần 5 |
-| `tools/overrides/*.csv` | C (C2) | Dev 2 (D2) | Dần theo tuần 2–4 |
+| `lib/data/db/dictionary.drift` (schema từ điển) | Leader (L4) | Ly (D2) | Cuối tuần 1 |
+| Cột đồng bộ trong `app_database.dart` | Leader (L4) | Ly (D5) | Cuối tuần 1 |
+| `NotificationService` (chỉ chữ ký, thân rỗng) | Ly (D1) | Leader (L9) | Cuối tuần 1 |
+| `replay.dart` | Leader (L13) | Ly (D6) | Tuần 6 |
+| `research/sim/` khung mô phỏng | Leader (L12) | Nhi (C6) | Tuần 5 |
+| `tools/overrides/*.csv` | Nhi (C2) | Ly (D2) | Dần theo tuần 2–4 |
 
 ---
 
@@ -161,7 +161,7 @@ docs/algorithms.md  docs/test-cases.md
 - [ ] **Step 6:** Tạo Firebase project, bật Email/Password Auth và Firestore (Native mode), thêm email 2 thành viên vào Users and permissions.
 - [ ] **Step 7:** Commit `docs(docs): add contributing guide, PR template, README skeleton` lên `develop`.
 
-**Xong khi:** Dev 2 và C clone được, mở được PR thử, Firebase project truy cập được.
+**Xong khi:** Ly và Nhi clone được, mở được PR thử, Firebase project truy cập được.
 
 ### Task L1: Khung app, theme, router, test kiến trúc (tuần 1)
 
@@ -278,7 +278,7 @@ docs/algorithms.md  docs/test-cases.md
 
 - [ ] **Step 1:** Viết schema và test → đỏ. **Step 2:** Chạy `dart run build_runner build` → cài 2 DB → xanh.
 - [ ] **Step 3:** Màn Splash (`lib/presentation/screens/splash/splash_screen.dart`): gọi `openFromAssets(onProgress:)`, hiện thanh tiến trình khi chép lần đầu, xong thì vào router. Widget test: `onProgress` 0 → 0.5 → 1.0 thì thanh tiến trình đổi theo và cuối cùng chuyển sang `/home`.
-- [ ] **Step 4:** Push `dictionary.drift` lên `develop` sớm (cuối tuần 1) và báo Dev 2.
+- [ ] **Step 4:** Push `dictionary.drift` lên `develop` sớm (cuối tuần 1) và báo Ly.
 - [ ] **Step 5:** Commit `feat(data): add dictionary and app drift databases with splash loader`.
 
 ### Task L5: Tra từ, tìm kiếm, chi tiết từ, TTS (tuần 2–3)
@@ -502,7 +502,7 @@ docs/algorithms.md  docs/test-cases.md
 - Cùng seed → cùng kết quả; khác seed → khác.
 - `order_by_lowest_r` trả thẻ R nhỏ nhất đầu tiên trên một danh sách tự tạo.
 
-- [ ] **Step 1:** Test → đỏ. **Step 2:** Cài đặt → xanh. **Step 3:** Script chạy lưới N ∈ {7,14,30}, K ∈ {50,100}, 20 seed → `research/figures/*.png` + bảng CSV. Bàn giao cho C. **Step 4:** Commit `feat(research): learner simulator and backlog strategies`.
+- [ ] **Step 1:** Test → đỏ. **Step 2:** Cài đặt → xanh. **Step 3:** Script chạy lưới N ∈ {7,14,30}, K ∈ {50,100}, 20 seed → `research/figures/*.png` + bảng CSV. Bàn giao cho Nhi. **Step 4:** Commit `feat(research): learner simulator and backlog strategies`.
 
 ### Task L13: Port chiến lược thắng và replay (tuần 6)
 
@@ -530,7 +530,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ---
 
-# TRACK DEV 2
+# TRACK LY (task D)
 
 ### Task D1: CI và chữ ký NotificationService (tuần 1)
 
@@ -547,7 +547,7 @@ docs/algorithms.md  docs/test-cases.md
 ### Task D2: Pipeline từ điển (tuần 1–2, cập nhật CSV tới tuần 4)
 
 **Files:**
-- Create: `tools/build_dictionary.py`, `tools/check_dictionary.py`, `tools/requirements.txt`, `tools/README.md` (nguồn + giấy phép + cách chạy), `tools/overrides/{meaning_vi,hanviet}.csv` (header do D2 định nghĩa, C điền)
+- Create: `tools/build_dictionary.py`, `tools/check_dictionary.py`, `tools/requirements.txt`, `tools/README.md` (nguồn + giấy phép + cách chạy), `tools/overrides/{meaning_vi,hanviet}.csv` (header do D2 định nghĩa, Nhi điền)
 - Output: `assets/dictionary.sqlite`
 
 **Interfaces:**
@@ -653,7 +653,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ---
 
-# TRACK C
+# TRACK NHI (task C)
 
 ### Task C1: Môi trường và dữ liệu nghiên cứu (tuần 1)
 
@@ -664,7 +664,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ### Task C2: Soát CSV nghĩa Việt và Hán-Việt (tuần 1–4, mỗi tuần 1–2 cấp HSK)
 
-- [ ] Dev 2 xuất danh sách từ HSK n kèm nghĩa CVDICT và Hán-Việt tự ghép; C sửa trong Excel, lưu UTF-8 vào `tools/overrides/*.csv`.
+- [ ] Ly xuất danh sách từ HSK n kèm nghĩa CVDICT và Hán-Việt tự ghép; Nhi sửa trong Excel, lưu UTF-8 vào `tools/overrides/*.csv`.
 - [ ] Ưu tiên: từ thiếu nghĩa Việt, chữ có nhiều âm Hán-Việt, nghĩa máy dịch sai rõ ràng.
 - [ ] Mỗi cấp một commit `chore(data): curate HSK n meanings and Han-Viet`.
 
@@ -715,7 +715,7 @@ docs/algorithms.md  docs/test-cases.md
 
 ## Lịch theo tuần (tóm tắt)
 
-| Tuần | Leader | Dev 2 | C |
+| Tuần | Leader | Ly | Nhi |
 |---|---|---|---|
 | 1 (23/11) | L0, L1, L2, L3, L4 | D1, D2 v0 | C1, C2 (HSK 1) |
 | 2 | L6, L7, bắt đầu L5 | D2 v1 | C2 (HSK 2), C7 bắt đầu |
@@ -727,4 +727,4 @@ docs/algorithms.md  docs/test-cases.md
 | 8–9 | L14 | D7 | C7 báo cáo |
 | 10 (–31/01) | Diễn tập | Diễn tập | Video, slide |
 
-Thứ tự cắt khi trễ: kiểu ôn "nghe" (L8) → C5 → `replay` trong D6 (dùng LWW cho cả trạng thái thẻ). Nếu leader trễ sau tuần 4: chuyển L9 (Cài đặt) cho Dev 2.
+Thứ tự cắt khi trễ: kiểu ôn "nghe" (L8) → C5 → `replay` trong D6 (dùng LWW cho cả trạng thái thẻ). Nếu leader trễ sau tuần 4: chuyển L9 (Cài đặt) cho Ly.
