@@ -76,6 +76,8 @@ Xong task: mở PR vào `develop`, gắn leader review.
 
 Quy tắc nhánh, commit, phạm vi task, code: xem [CONTRIBUTING.md](../CONTRIBUTING.md).
 
+Dùng AI (Claude Code, Codex, Cursor, Copilot…): mở đúng thư mục repo, công cụ sẽ tự đọc [AGENTS.md](../AGENTS.md). Câu đầu tiên nói rõ mã task, ví dụ "Mình làm Task D2". Code AI viết vẫn là code của mình: tự đọc lại trước khi commit.
+
 ## 4. Kẹt thì sao
 
 - Câu hỏi về interface, task của người khác: hỏi leader trong nhóm chat hoặc comment vào PR.
