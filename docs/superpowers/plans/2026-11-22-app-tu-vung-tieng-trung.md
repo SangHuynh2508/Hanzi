@@ -26,7 +26,7 @@
 | L5 Tra từ, chi tiết từ, TTS | Xong | `8fb388d`, `c81869b` |
 | L6 CRUD bộ từ/thẻ, thêm bộ HSK | Xong | `30cd957` |
 | L7–L14 | Chưa làm | |
-| D1–D7 (Ly), C1–C7 (Nhi) | Chưa làm | |
+| D1–D7 (Ly), C1–C7 (Nhi) | D1 code xong; chờ thử trên PR. D2–D7, C1–C7 chưa làm | |
 
 Code ở trên nằm ở nhánh `feature/app-week1`, vào `develop` sau khi PR của leader được merge. Người làm xong task thì sửa dòng tương ứng trong bảng này trong cùng PR.
 
